@@ -5,6 +5,7 @@ import { readFileSync, existsSync, mkdirSync, writeFileSync } from "fs";
 import { join } from "path";
 import readline from "readline";
 
+import { generateMiddleware } from "./templates/middleware.template.js";
 import { generateController } from "./templates/controller.template.js";
 import { generateService } from "./templates/service.template.js";
 import { generateRoutes } from "./templates/routes.template.js";
@@ -133,10 +134,26 @@ Uso de Vane CLI:
         }
 
         case "make:middleware": {
-            console.log(`[INFO] Generando middleware: ${rawName}`);
-            // (Pendiente: agregaremos este caso de forma limpia en el siguiente paso)
+            const dir = join(process.cwd(), "src", "middlewares");
+            if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+
+            const nameLower = rawName.charAt(0).toLowerCase() + rawName.slice(1);
+            const filePath = join(dir, `${nameLower}.middleware.ts`);
+
+            if (existsSync(filePath)) {
+                console.warn(`[WARNING] El middleware "${nameLower}" ya existe en src/middlewares/`);
+                const shouldOverwrite = await askQuestion("¿Deseas sobreescribirlo?");
+                if (!shouldOverwrite) {
+                    console.log("[INFO] Operación cancelada.");
+                    process.exit(0);
+                }
+            }
+
+            writeFileSync(filePath, generateMiddleware(rawName), "utf-8");
+            console.log(`\n✅ [INFO] Middleware creado con éxito en: src/middlewares/${nameLower}.middleware.ts\n`);
             break;
         }
+
 
         case "make:controller":
         case "make:service":
