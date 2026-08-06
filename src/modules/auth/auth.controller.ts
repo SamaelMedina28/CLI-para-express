@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { AuthService } from "./auth.service.js";
+import type { AuthenticatedRequest } from "@src/middlewares/auth.middleware.js";
 
 export const AuthController = {
     async register(req: Request, res: Response, next: NextFunction) {
@@ -57,4 +58,12 @@ export const AuthController = {
             res.status(500).json({ message: "Error al cerrar sesión" });
         }
     },
+
+    me(req: AuthenticatedRequest, res: Response) {
+        try {
+            res.json(req.user);
+        } catch (err: any) {
+            res.status(500).json({ message: "Error al obtener el usuario" });
+        }
+    }
 };
