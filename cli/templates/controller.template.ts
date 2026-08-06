@@ -1,12 +1,9 @@
-// cli/templates/controller.template.ts
-export function generateController(modelName: string) {
-    const model = modelName; // ej. "User"
-    const modelLower = modelName.charAt(0).toLowerCase() + modelName.slice(1); // "user"
+export function generateController(modelName: string): string {
+    const model = modelName;
+    const modelLower = modelName.charAt(0).toLowerCase() + modelName.slice(1);
 
-    return `
-import type { Request, Response, NextFunction } from "express";
+    return `import type { Request, Response, NextFunction } from "express";
 import { ${model}Service } from "./${modelLower}.service.js";
-import ${model} from "../models/${modelLower}.js";
 
 export const ${model}Controller = {
     async index(req: Request, res: Response, next: NextFunction) {
@@ -21,6 +18,9 @@ export const ${model}Controller = {
     async getById(req: Request, res: Response, next: NextFunction) {
         try {
             const ${modelLower} = await ${model}Service.getById(Number(req.params.id));
+            if (!${modelLower}) {
+                return res.status(404).json({ message: "${model} not found" });
+            }
             res.json(${modelLower});
         } catch (err) {
             next(err);
@@ -31,6 +31,24 @@ export const ${model}Controller = {
         try {
             const ${modelLower} = await ${model}Service.create(req.body);
             res.status(201).json(${modelLower});
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    async update(req: Request, res: Response, next: NextFunction) {
+        try {
+            const ${modelLower} = await ${model}Service.update(Number(req.params.id), req.body);
+            res.json(${modelLower});
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    async delete(req: Request, res: Response, next: NextFunction) {
+        try {
+            await ${model}Service.delete(Number(req.params.id));
+            res.status(204).send();
         } catch (err) {
             next(err);
         }
