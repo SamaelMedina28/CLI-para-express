@@ -15,7 +15,7 @@ export function authMiddleware(
     next: NextFunction
 ) {
     // 1. Obtener el token desde Cookie O desde el Header Authorization
-    const tokenFromCookie = req.cookies?.token;
+    const tokenFromCookie = req.cookies?.jwt;
     const authHeader = req.headers.authorization;
     const tokenFromHeader = authHeader && authHeader.startsWith("Bearer ")
         ? authHeader.split(" ")[1]
