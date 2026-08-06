@@ -50,37 +50,34 @@ Asegúrate de tener instalado:
 
 ## Clonar e Instalar dependencias
 
-````plaintext
+```
 # Clonar el repositorio
 git clone [https://github.com/tu-usuario/tu-repositorio.git](https://github.com/tu-usuario/tu-repositorio.git)
 cd tu-repositorio
 
 # Instalar dependencias
 pnpm install
-
+```
 ## Configurar variables de entorno
 
-Crea un archivo `.env` en la raíz del proyecto basado en `.env.example` y configura las siguientes variables:
+Crea un archivo `.env` en la raíz del proyecto basado en `.env.example` y configura las variables:
 
 ```
 ## Variables de Entorno
+
 Copia el archivo .env.example a .env:
 
-```
 cp .env.example .env
 ```
+
 Configura tus variables en el archivo .env:
 ```
-PORT=3000
-<<<<<<< HEAD
-````
-=======
 DATABASE_URL="postgresql://usuario:password@localhost:5432/tu_base_datos?schema=public"
-JWT_SECRET="tu_clave_secreta_super_segura"
 FRONTEND_URL="http://localhost:5173,http://localhost:3000"
-NODE_ENV="development"
+JWT_SECRET="tu_clave_secreta_super_segura"
+NODE_ENV="development" # o "production"
+PORT=3000
 ```
->>>>>>> 5a29267049217218a80c805501516c343112a6b4
 
 ## Migraciones y Base de Datos
 
@@ -102,7 +99,7 @@ pnpm prisma generate
 pnpm dev
 ```
 
-🛠️ **Vane CLI (Generador de Código)** 
+## 🛠️ **Vane CLI (Generador de Código)** 
 El proyecto incluye Vane, un generador de código que automatiza la creación de componentes para agilizar el desarrollo:
 
 | Comando | Descripción |
