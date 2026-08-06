@@ -5,15 +5,7 @@ import type { AuthenticatedRequest } from "@src/middlewares/auth.middleware.js";
 export const AuthController = {
     async register(req: Request, res: Response, next: NextFunction) {
         try {
-            const { email, password, name } = req.body;
-
-            if (!email || !password) {
-                return res
-                    .status(400)
-                    .json({ message: "Email y contraseña son obligatorios" });
-            }
-
-            const user = await AuthService.register({ email, password, name });
+            const user = await AuthService.register(req.body);
             res.status(201).json({
                 message: "Usuario registrado con éxito",
                 user,
@@ -27,15 +19,7 @@ export const AuthController = {
 
     async login(req: Request, res: Response, next: NextFunction) {
         try {
-            const { email, password } = req.body;
-
-            if (!email || !password) {
-                return res
-                    .status(400)
-                    .json({ message: "Email y contraseña son obligatorios" });
-            }
-
-            const { user, token } = await AuthService.login({ email, password });
+            const { user, token } = await AuthService.login(req.body);
 
             res.cookie("jwt", token, {
                 httpOnly: true,
