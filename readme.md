@@ -41,6 +41,7 @@ Incluye autenticación segura basada en **JWT + Cookies HttpOnly**, validaciones
 ├── tsconfig.json
 └── package.json
 
+```
 ## Requisitos previos
 
 Asegúrate de tener instalado:
@@ -58,7 +59,6 @@ cd tu-repositorio
 
 # Instalar dependencias
 pnpm install
-```
 
 ## Configurar variables de entorno
 
@@ -95,20 +95,13 @@ pnpm dev
 
 | Comando | Descripción |
 |---------|-------------|
-| `pnpm vane <Nombre>` o `pnpm vane make:all <Nombre>` | Genera un módulo completo (service, controller, routes) dentro de `src/modules/<nombre>/` |
-| `pnpm vane make:middleware <Nombre>` | Crea un nuevo Middleware en `src/middlewares/` |
-| `pnpm vane make:controller <Nombre>` | Crea un Controller individual en `src/controllers/` |
-| `pnpm vane make:service <Nombre>` | Crea un Service individual en `src/services/` |
-| `pnpm vane make:routes <Nombre>` | Crea un archivo de rutas en `src/routes/` |
+| `pnpm vane <Nombre>` | Genera un módulo completo (service, controller, routes) dentro de `src/modules/<nombre>/` |
 
 Ejemplos:
 
 ```bash
 # Crear el módulo completo para Libro
-pnpm vane make:all Libro
-
-# Crear un middleware para validar roles
-pnpm vane make:middleware CheckRole
+pnpm vane Libro
 ```
 
 🔐 **Autenticación & Seguridad**
@@ -122,13 +115,3 @@ Validaciones: Esquemas Zod para la verificación estricta de payloads.
 - `pnpm start`: Ejecuta el código compilado en producción (node dist/src/server.js).
 - `pnpm vane`: Ejecuta la herramienta de línea de comandos de Vane.
 📄 LicenciaEste proyecto está bajo la Licencia MIT.
-
-### Tip rápido antes de subir a GitHub:
-Asegúrate de tener un archivo **`.gitignore`** en la raíz para que no subas información sensible ni archivos innecesarios. Debe incluir como mínimo:
-
-```text
-node_modules/
-dist/
-.env
-*.log
-Y crea un archivo .env.example con las variables sin datos sensibles para que los usuarios sepan qué completar al clonar.
