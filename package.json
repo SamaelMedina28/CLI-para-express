@@ -1,40 +1,41 @@
 {
-  "name": "Express-prisma",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/index.ts",
-    "vane": "tsx cli/vane.ts"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.17.0",
-      "onFail": "download"
+    "name": "Express-prisma",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/src/server.js",
+    "scripts": {
+        "dev": "tsx watch src/server.ts",
+        "build": "tsc",
+        "start": "node dist/src/server.js",
+        "vane": "tsx cli/vane.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devEngines": {
+        "packageManager": {
+            "name": "pnpm",
+            "version": "^11.17.0",
+            "onFail": "download"
+        }
+    },
+    "type": "module",
+    "devDependencies": {
+        "@prisma/internals": "^7.9.1",
+        "@types/express": "^5.0.6",
+        "@types/node": "^26.1.2",
+        "@types/pg": "^8.20.4",
+        "eslint": "^10.8.0",
+        "prisma": "^7.9.1",
+        "tsx": "^4.23.7",
+        "typescript": "^7.0.2"
+    },
+    "dependencies": {
+        "@prisma/adapter-pg": "^7.9.1",
+        "@prisma/client": "^7.9.1",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "pg": "^8.22.0",
+        "zod": "^4.4.3"
     }
-  },
-  "type": "module",
-  "devDependencies": {
-    "@prisma/internals": "^7.9.1",
-    "@types/express": "^5.0.6",
-    "@types/node": "^26.1.2",
-    "@types/pg": "^8.20.4",
-    "eslint": "^10.8.0",
-    "prisma": "^7.9.1",
-    "tsx": "^4.23.7",
-    "typescript": "^7.0.2"
-  },
-  "dependencies": {
-    "@prisma/adapter-pg": "^7.9.1",
-    "@prisma/client": "^7.9.1",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "pg": "^8.22.0",
-    "zod": "^4.4.3"
-  }
 }
