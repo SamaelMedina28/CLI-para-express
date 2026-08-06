@@ -4,6 +4,7 @@ const { getDMMF } = pkg;
 
 import { readFileSync } from "fs";
 import { join } from "path";
+import { generateController } from "./templates/controller.template.js";
 
 async function main() {
     const modelName = process.argv[2];
@@ -31,7 +32,8 @@ async function main() {
         process.exit(1);
     }
 
-    console.log(JSON.stringify(model, null, 2));
+    const controllerCode = generateController(model.name);
+    console.log(controllerCode);
 }
 
 main();
