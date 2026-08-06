@@ -34,12 +34,27 @@ export const AuthController = {
                     .json({ message: "Email y contraseña son obligatorios" });
             }
 
-            const result = await AuthService.login({ email, password });
-            res.json({ message: "Inicio de sesión exitoso", ...result });
-        } catch (err: any) {
-            res.status(401).json({
-                message: err.message || "Error al iniciar sesión",
+            const { user, token } = await AuthService.login({ email, password });
+
+            res.cookie("jwt", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 24 * 60 * 60 * 1000, // 1 dia
             });
+
+            res.json({ message: "Inicio de sesión exitoso", user });
+        } catch (err: any) {
+            res.status(401).json({ message: err.message || "Error al iniciar sesión" });
+        }
+    },
+
+    async logout(req: Request, res: Response) {
+        try {
+            res.clearCookie("jwt");
+            res.json({ message: "Cierre de sesión exitoso" });
+        } catch (err: any) {
+            res.status(500).json({ message: "Error al cerrar sesión" });
         }
     },
 };
