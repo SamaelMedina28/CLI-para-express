@@ -1,13 +1,6 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-
-// Extender la interfaz Request de Express para adjuntar el usuario decodificado
-export interface AuthenticatedRequest extends Request {
-    user?: {
-        id: number;
-        email: string;
-    };
-}
+import type { AuthenticatedRequest } from "../types/generics.js";
 
 export function authMiddleware(
     req: AuthenticatedRequest,
