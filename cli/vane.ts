@@ -26,87 +26,131 @@ function askQuestion(query: string): Promise<boolean> {
 
 async function main() {
     const args = process.argv.slice(2);
-    const rawModelName = args[0];
-
-    if (!rawModelName) {
-        console.error("[ERROR] Debes indicar el nombre del modelo.");
-        console.log("-> Ejemplo: pnpm vane User");
+    const firstArg = args[0];
+    const secondArg = args[1];
+    if (!firstArg) {
+        console.error("[ERROR] Debes proporcionar un comando o nombre de modelo.");
+        console.log(`
+Uso de Vane CLI:
+  pnpm vane <Modelo>                  (Ej: pnpm vane User -> genera todo)
+  pnpm vane make:all <Modelo>         (Ej: pnpm vane make:all User)
+  pnpm vane make:middleware <Nombre>  (Ej: pnpm vane make:middleware auth)
+  pnpm vane make:controller <Nombre>  (Ej: pnpm vane make:controller Libro)
+  pnpm vane make:service <Nombre>     (Ej: pnpm vane make:service Libro)
+  pnpm vane make:routes <Nombre>      (Ej: pnpm vane make:routes Libro)
+`);
         process.exit(1);
     }
 
-    // 1. Validar contra prisma schema
-    const schemaPath = join(process.cwd(), "prisma", "schema.prisma");
-    if (!existsSync(schemaPath)) {
-        console.error("[ERROR] No se encontró el archivo prisma/schema.prisma");
+
+    // Identificamos si se usó un subcomando como "make:middleware" o solo un modelo como "User"
+    const isSubcommand = firstArg.startsWith("make:");
+    const command = isSubcommand ? firstArg : "make:all";
+    const rawName = isSubcommand ? secondArg : firstArg;
+
+    if (!rawName) {
+        console.error(`[ERROR] Debes indicar el nombre para el comando "${command}".`);
+        console.log(`-> Ejemplo: pnpm vane ${command} MiNombre`);
         process.exit(1);
     }
 
-    const schema = readFileSync(schemaPath, "utf-8");
-    const dmmf = await getDMMF({ datamodel: schema });
+    switch (command) {
+        case "make:all": {
+            // 1. Validar contra prisma schema
+            const schemaPath = join(process.cwd(), "prisma", "schema.prisma");
+            if (!existsSync(schemaPath)) {
+                console.error("[ERROR] No se encontró el archivo prisma/schema.prisma");
+                process.exit(1);
+            }
 
-    const model = dmmf.datamodel.models.find(
-        (m) => m.name.toLowerCase() === rawModelName.toLowerCase(),
-    );
+            const schema = readFileSync(schemaPath, "utf-8");
+            const dmmf = await getDMMF({ datamodel: schema });
 
-    if (!model) {
-        console.error(
-            `[ERROR] No se encontró el modelo "${rawModelName}" en tu schema.prisma`,
-        );
-        process.exit(1);
-    }
+            const model = dmmf.datamodel.models.find(
+                (m) => m.name.toLowerCase() === rawName.toLowerCase(),
+            );
 
-    const modelName = model.name; // Ej: "User"
-    const modelLower = modelName.charAt(0).toLowerCase() + modelName.slice(1); // Ej: "user"
+            if (!model) {
+                console.error(
+                    `[ERROR] No se encontró el modelo "${rawName}" en tu schema.prisma`,
+                );
+                process.exit(1);
+            }
 
-    // 2. Definir rutas de salida (src/modules/user)
-    const moduleDir = join(process.cwd(), "src", "modules", modelLower);
+            const modelName = model.name; // Ej: "User"
+            const modelLower = modelName.charAt(0).toLowerCase() + modelName.slice(1); // Ej: "user"
 
-    // 3. Control de sobreescritura
-    if (existsSync(moduleDir)) {
-        console.warn(
-            `[WARNING]  El módulo "${modelLower}" ya existe en src/modules/${modelLower}`,
-        );
-        const shouldOverwrite = await askQuestion(
-            "¿Deseas sobreescribir los archivos existentes?",
-        );
+            // 2. Definir rutas de salida (src/modules/user)
+            const moduleDir = join(process.cwd(), "src", "modules", modelLower);
 
-        if (!shouldOverwrite) {
-            console.log("[INFO] Operación cancelada.");
-            process.exit(0);
+            // 3. Control de sobreescritura
+            if (existsSync(moduleDir)) {
+                console.warn(
+                    `[WARNING]  El módulo "${modelLower}" ya existe en src/modules/${modelLower}`,
+                );
+                const shouldOverwrite = await askQuestion(
+                    "¿Deseas sobreescribir los archivos existentes?",
+                );
+
+                if (!shouldOverwrite) {
+                    console.log("[INFO] Operación cancelada.");
+                    process.exit(0);
+                }
+            } else {
+                mkdirSync(moduleDir, { recursive: true });
+            }
+
+            // 4. Generar y escribir archivos
+            const filesToGenerate = [
+                {
+                    path: join(moduleDir, `${modelLower}.controller.ts`),
+                    content: generateController(modelName),
+                    name: "Controller",
+                },
+                {
+                    path: join(moduleDir, `${modelLower}.service.ts`),
+                    content: generateService(modelName),
+                    name: "Service",
+                },
+                {
+                    path: join(moduleDir, `${modelLower}.routes.ts`),
+                    content: generateRoutes(modelName),
+                    name: "Routes",
+                },
+            ];
+
+            console.log(`\n[INFO] Generando módulo para: ${modelName}...`);
+
+            for (const file of filesToGenerate) {
+                writeFileSync(file.path, file.content, "utf-8");
+                console.log(
+                    `  ✅ [INFO] Archivo creado: src/modules/${modelLower}/${file.name.toLowerCase()}.ts`,
+                );
+            }
+
+            console.log(`\n✨ [INFO] ¡Módulo ${modelName} generado con éxito!\n`);
+            break;
         }
-    } else {
-        mkdirSync(moduleDir, { recursive: true });
+
+        case "make:middleware": {
+            console.log(`[INFO] Generando middleware: ${rawName}`);
+            // (Pendiente: agregaremos este caso de forma limpia en el siguiente paso)
+            break;
+        }
+
+        case "make:controller":
+        case "make:service":
+        case "make:routes": {
+            console.log(`[INFO] Comando ${command} recibido para: ${rawName}`);
+            // (Pendiente)
+            break;
+        }
+
+        default:
+            console.error(`[ERROR] Comando no reconocido: ${command}`);
+            process.exit(1);
     }
 
-    // 4. Generar y escribir archivos
-    const filesToGenerate = [
-        {
-            path: join(moduleDir, `${modelLower}.controller.ts`),
-            content: generateController(modelName),
-            name: "Controller",
-        },
-        {
-            path: join(moduleDir, `${modelLower}.service.ts`),
-            content: generateService(modelName),
-            name: "Service",
-        },
-        {
-            path: join(moduleDir, `${modelLower}.routes.ts`),
-            content: generateRoutes(modelName),
-            name: "Routes",
-        },
-    ];
-
-    console.log(`\n[INFO] Generando módulo para: ${modelName}...`);
-
-    for (const file of filesToGenerate) {
-        writeFileSync(file.path, file.content, "utf-8");
-        console.log(
-            `  ✅ [INFO] Archivo creado: src/modules/${modelLower}/${file.name.toLowerCase()}.ts`,
-        );
-    }
-
-    console.log(`\n✨ [INFO] ¡Módulo ${modelName} generado con éxito!\n`);
 }
 
 main();
