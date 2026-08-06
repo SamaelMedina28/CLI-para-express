@@ -4,8 +4,9 @@ export function generateController(modelName: string) {
     const modelLower = modelName.charAt(0).toLowerCase() + modelName.slice(1); // "user"
 
     return `
-import { Request, Response, NextFunction } from "express";
-import { ${model}Service } from "./${modelLower}.service";
+import type { Request, Response, NextFunction } from "express";
+import { ${model}Service } from "./${modelLower}.service.js";
+import ${model} from "../models/${modelLower}.js";
 
 export const ${model}Controller = {
     async index(req: Request, res: Response, next: NextFunction) {
