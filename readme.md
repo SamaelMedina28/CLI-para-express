@@ -60,13 +60,9 @@ pnpm install
 ```
 ## Configurar variables de entorno
 
-Crea un archivo `.env` en la raíz del proyecto basado en `.env.example` y configura las variables:
+Crea un archivo `.env` en la raíz del proyecto copiando el archivo `.env.example` y configura las variables:
 
 ```
-## Variables de Entorno
-
-Copia el archivo .env.example a .env:
-
 cp .env.example .env
 ```
 
