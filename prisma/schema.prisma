@@ -27,3 +27,11 @@ model Post {
   author    User    @relation(fields: [authorId], references: [id])
   authorId  Int
 }
+
+model Libro {
+  id              Int     @id @default(autoincrement())
+  titulo          String
+  autor           String?
+  editorial       String?
+  anioPublicacion Int?
+}

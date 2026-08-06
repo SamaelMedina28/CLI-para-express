@@ -29,15 +29,15 @@ async function main() {
     const rawModelName = args[0];
 
     if (!rawModelName) {
-        console.error("❌ Debes indicar el nombre del modelo.");
-        console.log("👉 Ejemplo: pnpm vane User");
+        console.error("[ERROR] Debes indicar el nombre del modelo.");
+        console.log("-> Ejemplo: pnpm vane User");
         process.exit(1);
     }
 
     // 1. Validar contra prisma schema
     const schemaPath = join(process.cwd(), "prisma", "schema.prisma");
     if (!existsSync(schemaPath)) {
-        console.error("❌ No se encontró el archivo prisma/schema.prisma");
+        console.error("[ERROR] No se encontró el archivo prisma/schema.prisma");
         process.exit(1);
     }
 
@@ -50,7 +50,7 @@ async function main() {
 
     if (!model) {
         console.error(
-            `❌ No se encontró el modelo "${rawModelName}" en tu schema.prisma`,
+            `[ERROR] No se encontró el modelo "${rawModelName}" en tu schema.prisma`,
         );
         process.exit(1);
     }
@@ -64,14 +64,14 @@ async function main() {
     // 3. Control de sobreescritura
     if (existsSync(moduleDir)) {
         console.warn(
-            `⚠️  El módulo "${modelLower}" ya existe en src/modules/${modelLower}`,
+            `[WARNING]  El módulo "${modelLower}" ya existe en src/modules/${modelLower}`,
         );
         const shouldOverwrite = await askQuestion(
             "¿Deseas sobreescribir los archivos existentes?",
         );
 
         if (!shouldOverwrite) {
-            console.log("🛑 Operación cancelada.");
+            console.log("[INFO] Operación cancelada.");
             process.exit(0);
         }
     } else {
@@ -97,16 +97,16 @@ async function main() {
         },
     ];
 
-    console.log(`\n🚀 Generando módulo para: ${modelName}...`);
+    console.log(`\n[INFO] Generando módulo para: ${modelName}...`);
 
     for (const file of filesToGenerate) {
         writeFileSync(file.path, file.content, "utf-8");
         console.log(
-            `  ✅ Archivo creado: src/modules/${modelLower}/${file.name.toLowerCase()}.ts`,
+            `  ✅ [INFO] Archivo creado: src/modules/${modelLower}/${file.name.toLowerCase()}.ts`,
         );
     }
 
-    console.log(`\n✨ ¡Módulo ${modelName} generado con éxito!\n`);
+    console.log(`\n✨ [INFO] ¡Módulo ${modelName} generado con éxito!\n`);
 }
 
 main();

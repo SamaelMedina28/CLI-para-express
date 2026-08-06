@@ -1,11 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
-import { UserService } from "./user.service.js";
+import { LibroService } from "./libro.service.js";
 
-export const UserController = {
+export const LibroController = {
     async index(req: Request, res: Response, next: NextFunction) {
         try {
-            const users = await UserService.getAll();
-            res.json(users);
+            const libros = await LibroService.getAll();
+            res.json(libros);
         } catch (err) {
             next(err);
         }
@@ -13,11 +13,11 @@ export const UserController = {
 
     async getById(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await UserService.getById(Number(req.params.id));
-            if (!user) {
-                return res.status(404).json({ message: "User not found" });
+            const libro = await LibroService.getById(Number(req.params.id));
+            if (!libro) {
+                return res.status(404).json({ message: "Libro not found" });
             }
-            res.json(user);
+            res.json(libro);
         } catch (err) {
             next(err);
         }
@@ -25,8 +25,8 @@ export const UserController = {
 
     async store(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await UserService.create(req.body);
-            res.status(201).json(user);
+            const libro = await LibroService.create(req.body);
+            res.status(201).json(libro);
         } catch (err) {
             next(err);
         }
@@ -34,8 +34,8 @@ export const UserController = {
 
     async update(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await UserService.update(Number(req.params.id), req.body);
-            res.json(user);
+            const libro = await LibroService.update(Number(req.params.id), req.body);
+            res.json(libro);
         } catch (err) {
             next(err);
         }
@@ -43,7 +43,7 @@ export const UserController = {
 
     async delete(req: Request, res: Response, next: NextFunction) {
         try {
-            await UserService.delete(Number(req.params.id));
+            await LibroService.delete(Number(req.params.id));
             res.status(204).send();
         } catch (err) {
             next(err);
