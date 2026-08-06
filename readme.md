@@ -1,32 +1,30 @@
-# Express + Prisma + TypeScript Boilerplate
+## Express + Prisma + TypeScript Boilerplate
 
 Un **Starter Template** (Boilerplate) backend moderno, escalable y listo para producción, construido con **Express.js**, **TypeScript**, **Prisma ORM** y **PostgreSQL**.
 
 Incluye autenticación segura basada en **JWT + Cookies HttpOnly**, validaciones con **Zod**, manejo de **CORS** y **Vane CLI**, una herramienta de comandos rápida para autogenerar módulos, controladores, servicios y middlewares al estilo `php artisan`.
 
----
-
 ## Tecnologías y Librerías
 
-- **Entorno / Lenguaje:** Node.js, TypeScript
-- **Framework:** Express.js
-- **ORM / Base de datos:** Prisma ORM, PostgreSQL
-- **Gestor de paquetes / Runner:** pnpm, `tsx`
-- **Autenticación:** JSON Web Tokens (`jsonwebtoken`), `bcryptjs`, `cookie-parser`
-- **Seguridad & Red:** `cors` (Soporte con credentials/cookies)
-- **Validación:** Zod
-
----
+*   **Entorno / Lenguaje:** Node.js, TypeScript
+*   **Framework:** Express.js
+*   **ORM / Base de datos:** Prisma ORM, PostgreSQL
+*   **Gestor de paquetes / Runner:** pnpm, `tsx`
+*   **Autenticación:** JSON Web Tokens (`jsonwebtoken`), `bcryptjs`, `cookie-parser`
+*   **Seguridad & Red:** `cors` (Soporte con credentials/cookies)
+*   **Validación:** Zod
 
 ## Estructura del Proyecto
 
-```text
+```plaintext
 .
 ├── cli/                        # Herramienta CLI personalizada (Vane)
 │   └── vane.ts
 ├── prisma/                     # Esquema y migraciones de la base de datos
 │   ├── schema.prisma
 │   └── migrations/
+├── lib/                     	# Funciones y utilidades
+│   ├── prisma.ts				# Inicializador de prisma
 ├── src/
 │   ├── config/                 # Configuraciones globales
 │   ├── middlewares/            # Middlewares reutilizables (Auth, Validate, etc.)
@@ -40,19 +38,19 @@ Incluye autenticación segura basada en **JWT + Cookies HttpOnly**, validaciones
 ├── .env.example                # Variables de entorno de plantilla
 ├── tsconfig.json
 └── package.json
-
 ```
+
 ## Requisitos previos
 
 Asegúrate de tener instalado:
 
-- Node.js (v18 o superior)
-- PostgreSQL corriendo localmente o en un contenedor Docker
-- pnpm instalado globalmente (npm i -g pnpm)
+*   Node.js (v18 o superior)
+*   PostgreSQL corriendo localmente o en un contenedor Docker
+*   pnpm instalado globalmente (npm i -g pnpm)
 
 ## Clonar e Instalar dependencias
 
-```bash
+````plaintext
 # Clonar el repositorio
 git clone [https://github.com/tu-usuario/tu-repositorio.git](https://github.com/tu-usuario/tu-repositorio.git)
 cd tu-repositorio
@@ -70,48 +68,50 @@ FRONTEND_URL="http://localhost:3000"
 JWT_SECRET="tu_clave_secreta_super_segura"
 NODE_ENV="development" # o "production"
 PORT=3000
-```
+````
 
 ## Migraciones y Base de Datos
+
 Aplica las migraciones de Prisma para crear la estructura de tablas y generar los tipos de TypeScript:
 
-```bash
+```plaintext
 pnpm prisma migrate dev --name init
 ```
 
 Para generar solo los tipos sin aplicar migraciones:
 
-```bash
+```plaintext
 pnpm prisma generate
 ```
 
 ## Levantar servidor
 
-```bash
+```plaintext
 pnpm dev
 ```
 
-🛠️ **Vane CLI (Generador de Código)**El proyecto incluye Vane, un generador de código que automatiza la creación de componentes para agilizar el desarrollo:
+🛠️ \*\*Vane CLI (Generador de Código)\*\*El proyecto incluye Vane, un generador de código que automatiza la creación de componentes para agilizar el desarrollo:
 
 | Comando | Descripción |
-|---------|-------------|
-| `pnpm vane <Nombre>` | Genera un módulo completo (service, controller, routes) dentro de `src/modules/<nombre>/` |
+| --- | --- |
+| `pnpm vane <nombre>` | Genera un módulo completo (service, controller, routes) dentro de `src/modules/<nombre>/` |
 
 Ejemplos:
 
-```bash
+```plaintext
 # Crear el módulo completo para Libro
 pnpm vane Libro
 ```
 
 🔐 **Autenticación & Seguridad**
-- **Login / Registro**: `/api/auth/register` y `/api/auth/login`.
-- **Cookies HttpOnly**: El JWT se almacena y transporta de forma segura mediante **cookies HttpOnly**, mitigando ataques XSS.
-Rutas Protegidas: Incluye authMiddleware para resguardar endpoints privados validando la firma del token.
-Validaciones: Esquemas Zod para la verificación estricta de payloads.
-📜 Scripts Disponibles
-- `pnpm dev`: Ejecuta la app en modo desarrollo con hot-reload (tsx).
-- `pnpm build`: Compila el código de TypeScript a JavaScript en la carpeta dist/.
-- `pnpm start`: Ejecuta el código compilado en producción (node dist/src/server.js).
-- `pnpm vane`: Ejecuta la herramienta de línea de comandos de Vane.
-📄 LicenciaEste proyecto está bajo la Licencia MIT.
+
+*   **Login / Registro**: `/api/auth/register` y `/api/auth/login`.
+*   **Cookies HttpOnly**: El JWT se almacena y transporta de forma segura mediante **cookies HttpOnly**, mitigando ataques XSS.  
+    Rutas Protegidas: Incluye authMiddleware para resguardar endpoints privados validando la firma del token.  
+    Validaciones: Esquemas Zod para la verificación estricta de payloads.  
+    📜 Scripts Disponibles
+*   `pnpm dev`: Ejecuta la app en modo desarrollo con hot-reload (tsx).
+*   `pnpm build`: Compila el código de TypeScript a JavaScript en la carpeta dist/.
+*   `pnpm start`: Ejecuta el código compilado en producción (node dist/src/server.js).
+*   `pnpm vane`: Ejecuta la herramienta de línea de comandos de Vane.  
+    📄 LicenciaEste proyecto está bajo la Licencia MIT.
