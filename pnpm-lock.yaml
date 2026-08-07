@@ -204,7 +204,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  Express-prisma: 'link:'
+  template-vane: 'link:'
 
 importers:
 
@@ -216,9 +216,6 @@ importers:
       '@prisma/client':
         specifier: ^7.9.1
         version: 7.9.1(prisma@7.9.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2))(typescript@7.0.2)
-      Express-prisma:
-        specifier: 'link:'
-        version: 'link:'
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -246,6 +243,9 @@ importers:
       picocolors:
         specifier: ^1.1.1
         version: 1.1.1
+      template-vane:
+        specifier: 'link:'
+        version: 'link:'
       zod:
         specifier: ^4.4.3
         version: 4.4.3

@@ -1,5 +1,6 @@
 allowBuilds:
+  '@prisma/engines': true
   esbuild: true
   prisma: true
 overrides:
-  Express-prisma: 'link:'
+  template-vane: 'link:'
