@@ -246,10 +246,61 @@ async function main() {
             );
             break;
         }
-        case "make:service":
+        case "make:service": {
+            const { targetDir, nameUpper, nameLower, relativePath } =
+                parsePathAndName(rawName, "services", isModuleFlag);
+
+            if (!existsSync(targetDir))
+                mkdirSync(targetDir, { recursive: true });
+
+            const filePath = join(targetDir, `${nameLower}.service.ts`);
+
+            if (existsSync(filePath)) {
+                console.warn(
+                    `[WARNING] El service en "${relativePath}.service.ts" ya existe.`,
+                );
+                const shouldOverwrite = await askQuestion(
+                    "¿Deseas sobreescribirlo?",
+                );
+                if (!shouldOverwrite) {
+                    console.log("[INFO] Operación cancelada.");
+                    process.exit(0);
+                }
+            }
+
+            writeFileSync(filePath, generateService(nameUpper), "utf-8");
+            console.log(
+                `\n✅ [INFO] Service creado en: src/${relativePath}.service.ts\n`,
+            );
+            break;
+        }
+
         case "make:routes": {
-            console.log(`[INFO] Comando ${command} recibido para: ${rawName}`);
-            // (Pendiente)
+            const { targetDir, nameUpper, nameLower, relativePath } =
+                parsePathAndName(rawName, "routes", isModuleFlag);
+
+            if (!existsSync(targetDir))
+                mkdirSync(targetDir, { recursive: true });
+
+            const filePath = join(targetDir, `${nameLower}.routes.ts`);
+
+            if (existsSync(filePath)) {
+                console.warn(
+                    `[WARNING] El archivo de rutas en "${relativePath}.routes.ts" ya existe.`,
+                );
+                const shouldOverwrite = await askQuestion(
+                    "¿Deseas sobreescribirlo?",
+                );
+                if (!shouldOverwrite) {
+                    console.log("[INFO] Operación cancelada.");
+                    process.exit(0);
+                }
+            }
+
+            writeFileSync(filePath, generateRoutes(nameUpper), "utf-8");
+            console.log(
+                `\n✅ [INFO] Routes creado en: src/${relativePath}.routes.ts\n`,
+            );
             break;
         }
 
