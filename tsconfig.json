@@ -21,10 +21,8 @@
         "strict": true,
         "verbatimModuleSyntax": true,
         "isolatedModules": true,
-        "noUncheckedSideEffectImports": true,
         "moduleDetection": "force",
         "skipLibCheck": true,
-        "ignoreDeprecations": "6.0",
         "baseUrl": "./",
         "paths": {
             "@lib/*": ["lib/*"],
