@@ -2,12 +2,15 @@
     "name": "Express-prisma",
     "version": "1.0.0",
     "description": "",
+    "bin": {
+        "vane": "./dist/cli/vane.js"
+    },
     "main": "dist/src/server.js",
     "scripts": {
         "dev": "tsx watch src/server.ts",
         "build": "tsc",
         "start": "node dist/src/server.js",
-        "vane": "tsx cli/vane.ts"
+        "vane": "node ./dist/cli/vane.js"
     },
     "keywords": [],
     "author": "",

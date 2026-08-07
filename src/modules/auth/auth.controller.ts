@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { AuthService } from "./auth.service.js";
-import type { AuthenticatedRequest } from "@src/middlewares/auth.middleware.js";
+import type { AuthenticatedRequest } from "../../types/generics.js";
 
 export const AuthController = {
     async register(req: Request, res: Response, next: NextFunction) {

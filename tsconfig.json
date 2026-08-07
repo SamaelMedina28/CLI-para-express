@@ -23,17 +23,16 @@
         "isolatedModules": true,
         "moduleDetection": "force",
         "skipLibCheck": true,
-        "baseUrl": "./",
         "paths": {
-            "@lib/*": ["lib/*"],
-            "@src/*": ["src/*"],
-            "@middlewares/*": ["src/middlewares/*"],
-            "@controllers/*": ["src/controllers/*"],
-            "@services/*": ["src/services/*"],
-            "@routes/*": ["src/routes/*"],
-            "@schemas/*": ["src/schemas/*"],
+            "@lib/*": ["./lib/*"],
+            "@src/*": ["./src/*"],
+            "@middlewares/*": ["./src/middlewares/*"],
+            "@controllers/*": ["./src/controllers/*"],
+            "@services/*": ["./src/services/*"],
+            "@routes/*": ["./src/routes/*"],
+            "@schemas/*": ["./src/schemas/*"],
         }
     },
-    "include": ["src/**/*", "cli/**/*", "lib/**/*"],
+    "include": ["./src/**/*", "./cli/**/*", "./lib/**/*"],
     "exclude": ["node_modules", "dist"]
 }
