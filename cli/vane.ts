@@ -9,6 +9,7 @@ import { generateMiddleware } from "./templates/middleware.template.js";
 import { generateController } from "./templates/controller.template.js";
 import { generateService } from "./templates/service.template.js";
 import { generateRoutes } from "./templates/routes.template.js";
+import { generateSchema } from "./templates/schema.template.js";
 
 // Utilidad para preguntar en consola si sobreescribimos
 function askQuestion(query: string): Promise<boolean> {
@@ -134,15 +135,15 @@ async function main() {
 
             const modelName = model.name; // Ej: "User"
             const modelLower =
-                modelName.charAt(0).toLowerCase() + modelName.slice(1); // Ej: "user"
+                modelName.charAt(0).toLowerCase() + modelName.slice(1);
 
-            // 2. Definir rutas de salida (src/modules/user)
+            // 2. Definir rutas de salida
             const moduleDir = join(process.cwd(), "src", "modules", modelLower);
 
             // 3. Control de sobreescritura
             if (existsSync(moduleDir)) {
                 console.warn(
-                    `[WARNING]  El módulo "${modelLower}" ya existe en src/modules/${modelLower}`,
+                    `[WARNING] El módulo "${modelLower}" ya existe en src/modules/${modelLower}`,
                 );
                 const shouldOverwrite = await askQuestion(
                     "¿Deseas sobreescribir los archivos existentes?",
@@ -156,8 +157,13 @@ async function main() {
                 mkdirSync(moduleDir, { recursive: true });
             }
 
-            // 4. Generar y escribir archivos
+            // 4. Generar y escribir archivos (AHORA INCLUYE SCHEMA DINÁMICO)
             const filesToGenerate = [
+                {
+                    path: join(moduleDir, `${modelLower}.schema.ts`),
+                    content: generateSchema(modelName, model.fields),
+                    name: "Schema",
+                },
                 {
                     path: join(moduleDir, `${modelLower}.controller.ts`),
                     content: generateController(modelName),

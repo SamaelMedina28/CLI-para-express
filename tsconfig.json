@@ -26,7 +26,12 @@
         "baseUrl": "./",
         "paths": {
             "@lib/*": ["lib/*"],
-            "@src/*": ["src/*"]
+            "@src/*": ["src/*"],
+            "@middlewares/*": ["src/middlewares/*"],
+            "@controllers/*": ["src/controllers/*"],
+            "@services/*": ["src/services/*"],
+            "@routes/*": ["src/routes/*"],
+            "@schemas/*": ["src/schemas/*"],
         }
     },
     "include": ["src/**/*", "cli/**/*", "lib/**/*"],

@@ -1,17 +1,18 @@
 export function generateRoutes(modelName: string): string {
-    const model = modelName;
     const modelLower = modelName.charAt(0).toLowerCase() + modelName.slice(1);
 
-    return `import { Router, type Router as ExpressRouter } from "express";
-import { ${model}Controller } from "./${modelLower}.controller.js";
+    return `import { Router } from "express";
+import { ${modelName}Controller } from "@controllers/${modelLower}.controller.js";
+import { create${modelName}Schema, update${modelName}Schema } from "@schemas/${modelLower}.schema.js";
+import { validateBody } from "@middlewares/validate.middleware.js";
 
-const router: ExpressRouter = Router();
+const router = Router();
 
-router.get("/", ${model}Controller.index);
-router.get("/:id", ${model}Controller.getById);
-router.post("/", ${model}Controller.store);
-router.put("/:id", ${model}Controller.update);
-router.delete("/:id", ${model}Controller.delete);
+router.get("/", ${modelName}Controller.index);
+router.get("/:id", ${modelName}Controller.getById);
+router.post("/", validateBody(create${modelName}Schema), ${modelName}Controller.store);
+router.put("/:id", validateBody(update${modelName}Schema), ${modelName}Controller.update);
+router.delete("/:id", ${modelName}Controller.delete);
 
 export default router;
 `;
