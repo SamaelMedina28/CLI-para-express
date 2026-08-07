@@ -95,18 +95,73 @@ pnpm prisma generate
 pnpm dev
 ```
 
+Markdown
 ## 🛠️ **Vane CLI (Generador de Código)** 
-El proyecto incluye Vane, un generador de código que automatiza la creación de componentes para agilizar el desarrollo:
+
+El proyecto incluye **Vane**, una herramienta de CLI que automatiza la creación de componentes y arquitectura por módulos. Inspecciona tu `prisma/schema.prisma` para generar esquemas de validación de **Zod** dinámicos y listos para usar.
+
+### Tabla de Comandos
 
 | Comando | Descripción |
 | --- | --- |
-| `pnpm vane <nombre>` | Genera un módulo completo (service, controller, routes) dentro de `src/modules/<nombre>/` |
+| `pnpm vane <Modelo>` | Alias para `make:all`. Lee el modelo en `schema.prisma` y genera el módulo completo en `src/modules/<modelo>/` (Schema Zod, Controller, Service y Routes). |
+| `pnpm vane make:all <Modelo>` | Genera el módulo completo con Zod dinámico a partir de un modelo de Prisma. |
+| `pnpm vane make:controller <Nombre>` | Genera un archivo de controlador en `src/controllers/` (o en subcarpetas). |
+| `pnpm vane make:service <Nombre>` | Genera un archivo de servicio en `src/services/` (o en subcarpetas). |
+| `pnpm vane make:routes <Nombre>` | Genera un archivo de rutas en `src/routes/` (o en subcarpetas). |
+| `pnpm vane make:middleware <Nombre>` | Genera un middleware personalizado en `src/middlewares/`. |
 
-Ejemplos:
+---
 
-```plaintext
-# Crear el módulo completo para Libro
-pnpm vane Libro
+### 💡 Ejemplos de Uso
+
+#### 1. Módulo completo basado en Prisma (Recomendado)
+Asegúrate de tener definido tu modelo en `prisma/schema.prisma` y ejecuta:
+
+```bash
+pnpm vane Producto
+# o también:
+pnpm vane make:all Producto
+```
+Resultado: Crea la carpeta src/modules/producto/ con:
+
+```bash
+producto.schema.ts (con validaciones de Zod basadas en las columnas reales de tu modelo).
+
+producto.controller.ts
+
+producto.service.ts
+
+producto.routes.ts (con esquemas de Zod vinculados a POST y PUT).
+```
+
+## Comandos individuales por defecto
+Genera un archivo aislado en la carpeta global correspondiente:
+
+```bash
+pnpm vane make:controller Auth
+# Crea -> src/controllers/auth.controller.ts
+```
+
+```bash
+pnpm vane make:service Auth
+# Crea -> src/services/auth.service.ts
+```
+
+### Notación por puntos (Subcarpetas)
+Puedes organizar controladores, servicios o rutas dentro de subcarpetas separando la ruta con puntos (.):
+
+```bash
+pnpm vane make:controller admin.reports.sales
+# Crea -> src/controllers/admin/reports/sales.controller.ts
+```
+
+### Bandera -m / --module (Estructura modular personalizada)
+Si deseas crear un controlador, servicio o ruta individual dentro de la carpeta de módulos (src/modules/), añade la bandera -m:
+
+```bash
+pnpm vane make:controller libro.libro -m
+# Crea -> src/modules/libro/libro.controller.ts
 ```
 
 🔐 **Autenticación & Seguridad**
