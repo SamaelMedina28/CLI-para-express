@@ -11,8 +11,8 @@ import { generateController } from "./templates/controller.template.js";
 import { generateService } from "./templates/service.template.js";
 import { generateRoutes } from "./templates/routes.template.js";
 import { generateSchema } from "./templates/schema.template.js";
-import { askQuestion } from "./utils/prompt.utils.js";
-import { parsePathAndName } from "./utils/path.utils.js";
+import { askQuestion } from "./utils/prompt.util.js";
+import { parsePathAndName } from "./utils/path.util.js";
 
 
 async function main() {
