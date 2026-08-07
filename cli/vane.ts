@@ -1,9 +1,4 @@
 import { printBanner, printHelp, logger } from "./utils/logger.util.js";
-import { handleMakeAll } from "./commands/make-all.command.js";
-import { handleMakeController } from "./commands/make-controller.command.js";
-import { handleMakeService } from "./commands/make-service.command.js";
-import { handleMakeRoutes } from "./commands/make-routes.command.js";
-import { handleMakeMiddleware } from "./commands/make-middleware.command.js";
 
 async function main() {
     const args = process.argv.slice(2);
@@ -13,7 +8,6 @@ async function main() {
     const firstArg = cleanArgs[0];
     const secondArg = cleanArgs[1];
 
-    // Si no se pasan argumentos o piden ayuda
     if (!firstArg || firstArg === "--help" || firstArg === "-h") {
         printHelp();
         process.exit(0);
@@ -30,25 +24,34 @@ async function main() {
         process.exit(1);
     }
 
-    // Mostrar presentación antes de iniciar cualquier operación
     printBanner();
 
     switch (command) {
-        case "make:all":
+        case "make:all": {
+            const { handleMakeAll } = await import("./commands/make-all.command.js");
             await handleMakeAll(rawName);
             break;
-        case "make:middleware":
+        }
+        case "make:middleware": {
+            const { handleMakeMiddleware } = await import("./commands/make-middleware.command.js");
             await handleMakeMiddleware(rawName);
             break;
-        case "make:controller":
+        }
+        case "make:controller": {
+            const { handleMakeController } = await import("./commands/make-controller.command.js");
             await handleMakeController(rawName, isModuleFlag);
             break;
-        case "make:service":
+        }
+        case "make:service": {
+            const { handleMakeService } = await import("./commands/make-service.command.js");
             await handleMakeService(rawName, isModuleFlag);
             break;
-        case "make:routes":
+        }
+        case "make:routes": {
+            const { handleMakeRoutes } = await import("./commands/make-routes.command.js");
             await handleMakeRoutes(rawName, isModuleFlag);
             break;
+        }
         default:
             logger.error(`Comando no reconocido: "${command}"`);
             process.exit(1);
