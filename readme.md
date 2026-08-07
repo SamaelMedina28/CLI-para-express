@@ -89,29 +89,43 @@ Para generar solo los tipos sin aplicar migraciones:
 pnpm prisma generate
 ```
 
+## Orden de Ejecución Inicial
+
+Para que el proyecto y la CLI de Vane queden completamente funcionales, sigue este orden exacto:
+
+1.  **`pnpm install`** — Instala todas las dependencias del proyecto.
+2.  **`pnpm build`** — Compila TypeScript a JavaScript dentro de `dist/`. Este comando ejecuta automáticamente el script `postbuild`, el cual enlaza la CLI de Vane globalmente (`pnpm link --global`).
+3.  **`pnpm dev`** — Levanta el servidor en modo desarrollo con hot-reload.
+
+**¿Por qué este orden?**
+El comando `postbuild` intenta enlazar el binario definido en `package.json` (`./dist/cli/vane.js`). Si intentas enlazarlo antes de compilar, ese archivo aún no existe y el enlace falla o queda roto. Compilar primero garantiza que `dist/cli/vane.js` ya esté generado en disco antes de que pnpm cree el ejecutable global, evitando errores de archivos faltantes.
+
 ## Levantar servidor
 
 ```plaintext
 pnpm dev
 ```
 
-Markdown
+
 ## 🛠️ **Vane CLI (Generador de Código)** 
 
 El proyecto incluye **Vane**, una herramienta de CLI que automatiza la creación de componentes y arquitectura por módulos. Inspecciona tu `prisma/schema.prisma` para generar esquemas de validación de **Zod** dinámicos y listos para usar.
+
+> Gracias al enlace global (`postbuild`), la CLI se ejecuta directamente con `vane`, sin necesidad de escribir `pnpm vane` en caso de no ejecutar un comando global puedes usar `vane` con `pnpm vane <command> <args>` pero aumentara el tiempo de ejecucion (de ~90ms a ~1,500ms). 
 
 ### Tabla de Comandos
 
 | Comando | Descripción |
 | --- | --- |
-| `pnpm vane <Modelo>` | Alias para `make:all`. Lee el modelo en `schema.prisma` y genera el módulo completo en `src/modules/<modelo>/` (Schema Zod, Controller, Service y Routes). |
-| `pnpm vane make:all <Modelo>` | Genera el módulo completo con Zod dinámico a partir de un modelo de Prisma. |
-| `pnpm vane make:controller <Nombre>` | Genera un archivo de controlador en `src/controllers/` (o en subcarpetas). |
-| `pnpm vane make:service <Nombre>` | Genera un archivo de servicio en `src/services/` (o en subcarpetas). |
-| `pnpm vane make:routes <Nombre>` | Genera un archivo de rutas en `src/routes/` (o en subcarpetas). |
-| `pnpm vane make:middleware <Nombre>` | Genera un middleware personalizado en `src/middlewares/`. |
+| `vane <Modelo>` | Alias para `make:all`. Lee el modelo en `schema.prisma` y genera el módulo completo en `src/modules/<modelo>/` (Schema Zod, Controller, Service y Routes). |
+| `vane make:all <Modelo>` | Genera el módulo completo con Zod dinámico a partir de un modelo de Prisma. |
+| `vane make:controller <Nombre>` | Genera un archivo de controlador en `src/controllers/` (o en subcarpetas). |
+| `vane make:service <Nombre>` | Genera un archivo de servicio en `src/services/` (o en subcarpetas). |
+| `vane make:routes <Nombre>` | Genera un archivo de rutas en `src/routes/` (o en subcarpetas). |
+| `vane make:middleware <Nombre>` | Genera un middleware personalizado en `src/middlewares/`. |
 
 ---
+
 
 ### 💡 Ejemplos de Uso
 
@@ -119,9 +133,9 @@ El proyecto incluye **Vane**, una herramienta de CLI que automatiza la creación
 Asegúrate de tener definido tu modelo en `prisma/schema.prisma` y ejecuta:
 
 ```bash
-pnpm vane Producto
+vane Producto
 # o también:
-pnpm vane make:all Producto
+vane make:all Producto
 ```
 Resultado: Crea la carpeta src/modules/producto/ con:
 
@@ -139,12 +153,12 @@ producto.routes.ts (con esquemas de Zod vinculados a POST y PUT).
 Genera un archivo aislado en la carpeta global correspondiente:
 
 ```bash
-pnpm vane make:controller Auth
+vane make:controller Auth
 # Crea -> src/controllers/auth.controller.ts
 ```
 
 ```bash
-pnpm vane make:service Auth
+vane make:service Auth
 # Crea -> src/services/auth.service.ts
 ```
 
@@ -152,7 +166,7 @@ pnpm vane make:service Auth
 Puedes organizar controladores, servicios o rutas dentro de subcarpetas separando la ruta con puntos (.):
 
 ```bash
-pnpm vane make:controller admin.reports.sales
+vane make:controller admin.reports.sales
 # Crea -> src/controllers/admin/reports/sales.controller.ts
 ```
 
@@ -160,7 +174,7 @@ pnpm vane make:controller admin.reports.sales
 Si deseas crear un controlador, servicio o ruta individual dentro de la carpeta de módulos (src/modules/), añade la bandera -m:
 
 ```bash
-pnpm vane make:controller libro.libro -m
+vane make:controller libro.libro -m
 # Crea -> src/modules/libro/libro.controller.ts
 ```
 
@@ -172,7 +186,7 @@ pnpm vane make:controller libro.libro -m
     Validaciones: Esquemas Zod para la verificación estricta de payloads.  
     📜 Scripts Disponibles
 *   `pnpm dev`: Ejecuta la app en modo desarrollo con hot-reload (tsx).
-*   `pnpm build`: Compila el código de TypeScript a JavaScript en la carpeta dist/.
+*   `pnpm build`: Compila el código de TypeScript a JavaScript en la carpeta dist/ y enlaza la CLI globalmente vía `postbuild`.
 *   `pnpm start`: Ejecuta el código compilado en producción (node dist/src/server.js).
-*   `pnpm vane`: Ejecuta la herramienta de línea de comandos de Vane.  
+*   `vane`: Ejecuta la herramienta de línea de comandos de Vane directamente (ya no requiere `pnpm` como prefijo).  
     📄 LicenciaEste proyecto está bajo la Licencia MIT.
