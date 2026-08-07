@@ -1,5 +1,5 @@
 {
-    "name": "Express-prisma",
+    "name": "template-vane",
     "version": "1.0.0",
     "description": "",
     "bin": {
@@ -10,7 +10,8 @@
         "dev": "tsx watch src/server.ts",
         "build": "tsc",
         "start": "node dist/src/server.js",
-        "vane": "node ./dist/cli/vane.js"
+        "vane": "node ./dist/cli/vane.js",
+        "postbuild": "pnpm link -g ."
     },
     "keywords": [],
     "author": "",
