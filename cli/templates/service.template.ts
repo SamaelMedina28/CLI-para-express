@@ -4,6 +4,8 @@ export function generateService(modelName: string): string {
 
     return `import { prisma } from "@lib/prisma.js";
 
+// En caso de tener error al momento de llamar a prisma.modelo, hacer prisma migrate dev y prisma generate para que prisma detecte el modelo
+
 export const ${model}Service = {
     async getAll() {
         return await prisma.${modelLower}.findMany();
