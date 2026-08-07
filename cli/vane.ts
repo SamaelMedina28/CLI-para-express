@@ -4,74 +4,16 @@ const { getDMMF } = pkg;
 // TODO: verificar que al momento de crear archivos INDIVIDUALES las rutas de importacion aun funcionen
 
 import { readFileSync, existsSync, mkdirSync, writeFileSync } from "fs";
-import { join, dirname, basename } from "path";
-import readline from "readline";
+import { join } from "path";
 
 import { generateMiddleware } from "./templates/middleware.template.js";
 import { generateController } from "./templates/controller.template.js";
 import { generateService } from "./templates/service.template.js";
 import { generateRoutes } from "./templates/routes.template.js";
 import { generateSchema } from "./templates/schema.template.js";
+import { askQuestion } from "./utils/prompt.utils.js";
+import { parsePathAndName } from "./utils/path.utils.js";
 
-// Utilidad para preguntar en consola si sobreescribimos
-function askQuestion(query: string): Promise<boolean> {
-    const rl = readline.createInterface({
-        input: process.stdin as unknown as NodeJS.ReadableStream,
-        output: process.stdout as unknown as NodeJS.WritableStream,
-    });
-
-    return new Promise((resolve) => {
-        rl.question(`${query} (y/N): `, (answer) => {
-            rl.close();
-            resolve(answer.trim().toLowerCase() === "y");
-        });
-    });
-}
-
-/**
- * Procesa la notación por puntos y banderas como -m
- */
-function parsePathAndName(
-    rawInput: string,
-    defaultFolder: string,
-    isModuleFlag: boolean,
-) {
-    // Reemplaza puntos por barras: "libro.libro" -> "libro/libro"
-    const normalizedPath = rawInput.replace(/\./g, "/");
-
-    // Extrae el nombre final del archivo: "libro"
-    const rawFileName = basename(normalizedPath);
-
-    // Extrae las subcarpetas: "libro"
-    const subDirs = dirname(normalizedPath);
-
-    // Formateamos las variaciones de nombre
-    const nameUpper =
-        rawFileName.charAt(0).toUpperCase() + rawFileName.slice(1);
-    const nameLower =
-        rawFileName.charAt(0).toLowerCase() + rawFileName.slice(1);
-
-    // Si pasaron la bandera -m, la carpeta base cambia de "controllers" a "modules"
-    const baseFolder = isModuleFlag ? "modules" : defaultFolder;
-
-    // Construye la ruta final
-    const targetDir =
-        subDirs !== "."
-            ? join(process.cwd(), "src", baseFolder, subDirs)
-            : join(process.cwd(), "src", baseFolder);
-
-    const relativePath =
-        subDirs !== "."
-            ? `${baseFolder}/${subDirs}/${nameLower}`
-            : `${baseFolder}/${nameLower}`;
-
-    return {
-        targetDir,
-        nameUpper,
-        nameLower,
-        relativePath,
-    };
-}
 
 async function main() {
     const args = process.argv.slice(2);
