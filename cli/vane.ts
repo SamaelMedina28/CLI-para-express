@@ -1,5 +1,7 @@
 import pkg from "@prisma/internals";
 const { getDMMF } = pkg;
+// TODO: refactorizar todo para no tener todo en un solo archivo
+// TODO: verificar que al momento de crear archivos INDIVIDUALES las rutas de importacion aun funcionen
 
 import { readFileSync, existsSync, mkdirSync, writeFileSync } from "fs";
 import { join, dirname, basename } from "path";
