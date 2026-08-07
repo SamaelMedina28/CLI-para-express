@@ -3,7 +3,7 @@ export function generateController(modelName: string): string {
     const modelLower = modelName.charAt(0).toLowerCase() + modelName.slice(1);
 
     return `import type { Request, Response, NextFunction } from "express";
-import { ${model}Service } from "./${modelLower}.service.js";
+import { ${model}Service } from "@src/modules/${modelLower}/${modelLower}.service.js";
 
 export const ${model}Controller = {
     async index(req: Request, res: Response, next: NextFunction) {
