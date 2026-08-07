@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { printBanner, printHelp, logger } from "./utils/logger.util.js";
 
 async function main() {
