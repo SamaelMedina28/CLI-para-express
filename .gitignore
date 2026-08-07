@@ -16,3 +16,6 @@ node_modules
 # Archivos basura del Sistema Operativo
 .DS_Store
 Thumbs.db
+
+# Archivos compilados
+dist/*
