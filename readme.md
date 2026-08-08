@@ -23,8 +23,8 @@ Incluye autenticación segura basada en **JWT + Cookies HttpOnly**, validaciones
 ├── prisma/                     # Esquema y migraciones de la base de datos
 │   ├── schema.prisma
 │   └── migrations/
-├── lib/                     	# Funciones y utilidades
-│   ├── prisma.ts				# Inicializador de prisma
+├── lib/                         # Funciones y utilidades
+│   ├── prisma.ts                # Inicializador de prisma
 ├── src/
 │   ├── config/                 # Configuraciones globales
 │   ├── middlewares/            # Middlewares reutilizables (Auth, Validate, etc.)
@@ -50,7 +50,7 @@ Asegúrate de tener instalado:
 
 ## Clonar e Instalar dependencias
 
-```
+```plaintext
 # Clonar el repositorio
 git clone [https://github.com/tu-usuario/tu-repositorio.git](https://github.com/tu-usuario/tu-repositorio.git)
 cd tu-repositorio
@@ -58,16 +58,18 @@ cd tu-repositorio
 # Instalar dependencias
 pnpm install
 ```
+
 ## Configurar variables de entorno
 
 Crea un archivo `.env` en la raíz del proyecto copiando el archivo `.env.example` y configura las variables:
 
-```
+```plaintext
 cp .env.example .env
 ```
 
 Configura tus variables en el archivo .env:
-```
+
+```plaintext
 DATABASE_URL="postgresql://usuario:password@localhost:5432/tu_base_datos?schema=public"
 FRONTEND_URL="http://localhost:5173,http://localhost:3000"
 JWT_SECRET="tu_clave_secreta_super_segura"
@@ -93,12 +95,12 @@ pnpm prisma generate
 
 Para que el proyecto y la CLI de Vane queden completamente funcionales, sigue este orden exacto:
 
-1.  **`pnpm install`** — Instala todas las dependencias del proyecto.
-2.  **`pnpm build`** — Compila TypeScript a JavaScript dentro de `dist/`. Este comando ejecuta automáticamente el script `postbuild`, el cual enlaza la CLI de Vane globalmente (`pnpm link --global`).
-3.  **`pnpm dev`** — Levanta el servidor en modo desarrollo con hot-reload.
+1.  `**pnpm install**` — Instala todas las dependencias del proyecto.
+2.  `**pnpm build:cli**` — Compila TypeScript a JavaScript dentro de `dist/`. Este comando ejecuta automáticamente el script que enlaza la CLI de Vane globalmente (`pnpm link --global`).
+3.  `**pnpm dev**` — Levanta el servidor en modo desarrollo con hot-reload.
 
-**¿Por qué este orden?**
-El comando `postbuild` intenta enlazar el binario definido en `package.json` (`./dist/cli/vane.js`). Si intentas enlazarlo antes de compilar, ese archivo aún no existe y el enlace falla o queda roto. Compilar primero garantiza que `dist/cli/vane.js` ya esté generado en disco antes de que pnpm cree el ejecutable global, evitando errores de archivos faltantes.
+**¿Por qué este orden?**  
+El comando `**pnpm build:cli**` intenta enlazar el binario definido en `package.json` (`./dist/cli/vane.js`). Si intentas enlazarlo antes de compilar, ese archivo aún no existe y el enlace falla o queda roto. Compilar primero garantiza que `dist/cli/vane.js` ya esté generado en disco antes de que pnpm cree el ejecutable global, evitando errores de archivos faltantes.
 
 ## Levantar servidor
 
@@ -106,40 +108,38 @@ El comando `postbuild` intenta enlazar el binario definido en `package.json` (`.
 pnpm dev
 ```
 
-
-## 🛠️ **Vane CLI (Generador de Código)** 
+## 🛠️ **Vane CLI (Generador de Código)**
 
 El proyecto incluye **Vane**, una herramienta de CLI que automatiza la creación de componentes y arquitectura por módulos. Inspecciona tu `prisma/schema.prisma` para generar esquemas de validación de **Zod** dinámicos y listos para usar.
 
-> Gracias al enlace global (`postbuild`), la CLI se ejecuta directamente con `vane`, sin necesidad de escribir `pnpm vane` en caso de no ejecutar un comando global puedes usar `vane` con `pnpm vane <command> <args>` pero aumentara el tiempo de ejecucion (de ~90ms a ~1,500ms). 
+\> Gracias al enlace global (pnpm build:cli), la CLI se ejecuta directamente con `vane`, sin necesidad de escribir `pnpm vane` en caso de no ejecutar un comando global puedes usar `vane` con `pnpm vane <command></command> <args>` pero aumentara el tiempo de ejecucion (de ~90ms a ~1,500ms).
 
 ### Tabla de Comandos
 
 | Comando | Descripción |
 | --- | --- |
-| `vane <Modelo>` | Alias para `make:all`. Lee el modelo en `schema.prisma` y genera el módulo completo en `src/modules/<modelo>/` (Schema Zod, Controller, Service y Routes). |
-| `vane make:all <Modelo>` | Genera el módulo completo con Zod dinámico a partir de un modelo de Prisma. |
-| `vane make:controller <Nombre>` | Genera un archivo de controlador en `src/controllers/` (o en subcarpetas). |
-| `vane make:service <Nombre>` | Genera un archivo de servicio en `src/services/` (o en subcarpetas). |
-| `vane make:routes <Nombre>` | Genera un archivo de rutas en `src/routes/` (o en subcarpetas). |
-| `vane make:middleware <Nombre>` | Genera un middleware personalizado en `src/middlewares/`. |
-
----
-
+| `vane <modelo>` | Alias para `make:all`. Lee el modelo en `schema.prisma` y genera el módulo completo en `src/modules/<modelo>/` (Schema Zod, Controller, Service y Routes). |
+| `vane make:all <modelo>` | Genera el módulo completo con Zod dinámico a partir de un modelo de Prisma. |
+| `vane make:controller <nombre>` | Genera un archivo de controlador en `src/controllers/` (o en subcarpetas). |
+| `vane make:service <nombre>` | Genera un archivo de servicio en `src/services/` (o en subcarpetas). |
+| `vane make:routes <nombre>` | Genera un archivo de rutas en `src/routes/` (o en subcarpetas). |
+| `vane make:middleware <nombre>` | Genera un middleware personalizado en `src/middlewares/`. |
 
 ### 💡 Ejemplos de Uso
 
-#### 1. Módulo completo basado en Prisma (Recomendado)
+#### 1\. Módulo completo basado en Prisma (Recomendado)
+
 Asegúrate de tener definido tu modelo en `prisma/schema.prisma` y ejecuta:
 
-```bash
+```plaintext
 vane Producto
 # o también:
 vane make:all Producto
 ```
+
 Resultado: Crea la carpeta src/modules/producto/ con:
 
-```bash
+```plaintext
 producto.schema.ts (con validaciones de Zod basadas en las columnas reales de tu modelo).
 
 producto.controller.ts
@@ -150,32 +150,35 @@ producto.routes.ts (con esquemas de Zod vinculados a POST y PUT).
 ```
 
 ## Comandos individuales por defecto
+
 Genera un archivo aislado en la carpeta global correspondiente:
 
-```bash
+```plaintext
 vane make:controller Auth
-# Crea -> src/controllers/auth.controller.ts
+# Crea -&gt; src/controllers/auth.controller.ts
 ```
 
-```bash
+```plaintext
 vane make:service Auth
-# Crea -> src/services/auth.service.ts
+# Crea -&gt; src/services/auth.service.ts
 ```
 
 ### Notación por puntos (Subcarpetas)
+
 Puedes organizar controladores, servicios o rutas dentro de subcarpetas separando la ruta con puntos (.):
 
-```bash
+```plaintext
 vane make:controller admin.reports.sales
-# Crea -> src/controllers/admin/reports/sales.controller.ts
+# Crea -&gt; src/controllers/admin/reports/sales.controller.ts
 ```
 
 ### Bandera -m / --module (Estructura modular personalizada)
+
 Si deseas crear un controlador, servicio o ruta individual dentro de la carpeta de módulos (src/modules/), añade la bandera -m:
 
-```bash
+```plaintext
 vane make:controller libro.libro -m
-# Crea -> src/modules/libro/libro.controller.ts
+# Crea -&gt; src/modules/libro/libro.controller.ts
 ```
 
 🔐 **Autenticación & Seguridad**

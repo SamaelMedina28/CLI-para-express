@@ -9,9 +9,9 @@
     "scripts": {
         "dev": "tsx watch src/server.ts",
         "build": "tsc",
+        "build:cli": "tsc && pnpm link -g .",
         "start": "node dist/src/server.js",
-        "vane": "node ./dist/cli/vane.js",
-        "postbuild": "pnpm link -g ."
+        "vane": "node ./dist/cli/vane.js"
     },
     "keywords": [],
     "author": "",
@@ -51,7 +51,6 @@
         "jsonwebtoken": "^9.0.3",
         "pg": "^8.22.0",
         "picocolors": "^1.1.1",
-        "template-vane": "link:",
         "zod": "^4.4.3"
     }
 }
